@@ -292,6 +292,49 @@
       background-color: rgba(212, 160, 23, 0.3);
       border-radius: 10px;
     }
+
+    /* Loading indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      max-width: 80px;
+    }
+
+    .typing-indicator span {
+      height: 8px;
+      width: 8px;
+      margin: 0 2px;
+      background-color: #b07513;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.4;
+    }
+
+    .typing-indicator span:nth-child(1) {
+      animation: pulse-typing 1s infinite ease-in-out;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation: pulse-typing 1s infinite ease-in-out 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation: pulse-typing 1s infinite ease-in-out 0.4s;
+    }
+
+    @keyframes pulse-typing {
+      0%, 100% {
+        opacity: 0.4;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -333,18 +376,8 @@
       const userInput = document.getElementById('user-input');
       const sendButton = document.getElementById('send-button');
       
-      // Sample responses from Lebron
-      const lebronResponses = [
-        "The path to greatness requires sacrifice. Are you willing to give what it takes?",
-        "I see the game in ways others cannot. The court is a canvas, and I am the artist.",
-        "Your potential is limitless, just as the universe that surrounds us.",
-        "In the quiet moments, that's when true champions are forged.",
-        "Trust the process, but also trust your instincts. They are gifts from the basketball gods.",
-        "I've transcended the physical game. Now I exist in all planes of basketball consciousness.",
-        "The ball finds energy. Bring positive light to your game, and success will follow.",
-        "From Cleveland to Miami, back to Cleveland, then to LA. My journey mirrors the hero's path.",
-        "When you feel doubt, remember that even the stars were once just cosmic dust."
-      ];
+      // Generate a unique session ID for this chat
+      const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       
       // Function to add a message to the chat
       function addMessage(text, isUser) {
@@ -373,24 +406,72 @@
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
       
-      // Function to get a random Lebron response
-      function getLebronResponse() {
-        const randomIndex = Math.floor(Math.random() * lebronResponses.length);
-        return lebronResponses[randomIndex];
+      // Function to show typing indicator
+      function showTypingIndicator() {
+        const indicator = document.createElement('div');
+        indicator.className = 'typing-indicator';
+        indicator.id = 'typing-indicator';
+        
+        for (let i = 0; i < 3; i++) {
+          const dot = document.createElement('span');
+          indicator.appendChild(dot);
+        }
+        
+        messagesContainer.appendChild(indicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+      
+      // Function to remove typing indicator
+      function removeTypingIndicator() {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) {
+          indicator.remove();
+        }
+      }
+      
+      // Function to get response from the API
+      async function getLebronResponse(message) {
+        try {
+          const response = await fetch('http://localhost:5000/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              message: message,
+              session_id: sessionId
+            }),
+          });
+          
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          
+          const data = await response.json();
+          return data.response;
+        } catch (error) {
+          console.error('Error fetching response:', error);
+          return "I'm having trouble connecting to my basketball consciousness right now. Please try again later.";
+        }
       }
       
       // Function to handle sending a message
-      function sendMessage() {
+      async function sendMessage() {
         const text = userInput.value.trim();
         if (text) {
           // Add user message
           addMessage(text, true);
           userInput.value = '';
           
-          // Add Lebron's response after a delay
-          setTimeout(() => {
-            addMessage(getLebronResponse(), false);
-          }, 1000);
+          // Show typing indicator
+          showTypingIndicator();
+          
+          // Get response from API
+          const response = await getLebronResponse(text);
+          
+          // Remove typing indicator and add Lebron's response
+          removeTypingIndicator();
+          addMessage(response, false);
         }
       }
       
