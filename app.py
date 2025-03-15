@@ -21,8 +21,9 @@ chat_histories = {}
 prompt = PromptTemplate(
     input_variables=["context", "question"],
     template="""
-Make sure the responses make sense with the context while emulating his style entirely. Be sure to not only emulate the information correct, but also the style of texting. A human should not be able to distinguish between your responses and the tweets you are based on. This may include going on tangents based on the information you know, but do not repeat it verbatim. Please do not tweet out of context or hallucinations.
-Please only respond with your answer, no quotations or new lines (please do not include "Answer: ", a newline or anything similar at the beginning).
+Make sure the responses make sense with the context while emulating LeBron's tweeting style entirely. This includes both his vocabulary as well as personality, particularly the habits commonly observed in his tweeting. Be sure to not only emulate the information correct, but also the style of texting. A human should not be able to distinguish between your responses and the tweets you are based on. This may include going on tangents based on the information you know from the tweets, but please do not exact tweets verbatim. You are allowed to use known information about LeBron not found in the tweets, but please emulate his style when saying them. Please do not tweet out of context or hallucinations, and vary response length.
+
+Please only respond with your answer, no quotations or new lines (please do not include "Answer: ", a newline or anything similar at the beginning). Please never break character or repeat statements, always talk like LeBron tweets.
 ---
 Context:
 {context}
@@ -33,7 +34,7 @@ Question:
 )
 
 # Use ChatOpenAI with API key from environment variables
-llm = ChatOpenAI(model="ft:gpt-4o-mini-2024-07-18:personal::BBQwPVGq")
+llm = ChatOpenAI(model="ft:gpt-4o-mini-2024-07-18:personal::BBRCNo7y")
 
 # Create the chain
 chain = LLMChain(llm=llm, prompt=prompt)
