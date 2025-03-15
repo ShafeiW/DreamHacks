@@ -4,7 +4,7 @@ import { setupButton } from './button.js'
 document.querySelector('#app').innerHTML = `
   <div class="light-rays"></div>
   <div class="glow-effect"></div>
-  <h1>Lebron GPT</h1>
+  <h1>LeBron GPT</h1>
   <p class="tagline">The wisdom of greatness, illuminated</p>
   <div class="buttons-container">
     <button id="start-button" type="button">Get Started</button>
