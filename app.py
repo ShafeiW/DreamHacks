@@ -1,20 +1,19 @@
-from flask import Flask, request, jsonify
+import os
+
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
-from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain.schema import messages_to_dict
-from dotenv import load_dotenv
-import os
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_openai import ChatOpenAI
 
-# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Initialize a dictionary to store chat histories for different sessions
 chat_histories = {}
 
 # Define the prompt
@@ -64,10 +63,8 @@ Question:
 """
 )
 
-# Use ChatOpenAI with API key from environment variables
 llm = ChatOpenAI(model="ft:gpt-4o-2024-08-06:personal::BBTTojKr", temperature=0.9, streaming=True)
 
-# Create the chain
 chain = LLMChain(llm=llm, prompt=prompt)
 
 @app.route('/api/chat', methods=['POST'])
@@ -76,16 +73,13 @@ def chat():
     user_input = data.get('message', '')
     session_id = data.get('session_id', 'default')
     
-    # Get or create chat history for this session
     if session_id not in chat_histories:
         chat_histories[session_id] = ChatMessageHistory()
     
     history = chat_histories[session_id]
     
-    # Add user input to memory
     history.add_user_message(user_input)
     
-    # Prepare the context by converting messages to a readable format
     context = "\n".join(
         [
             f"{msg['type'].capitalize()}: {msg['data']['content']}"
@@ -94,10 +88,8 @@ def chat():
     )
     
     try:
-        # Invoke the chain with context and new question
         result = chain.invoke({"context": context, "question": user_input})
         
-        # Add the model's response to memory
         history.add_ai_message(result['text'])
         
         return jsonify({
@@ -119,5 +111,5 @@ def chat_page():
     return app.send_static_file('chat.html')
 
 if __name__ == '__main__':
-    app.static_folder = 'public'  # Set the static folder to your public directory
+    app.static_folder = 'public'
     app.run(debug=True, port=5000)
