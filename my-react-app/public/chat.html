@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lebron GPT - Chat</title>
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <style>
+    /* Import the Baskervville font */
+    @font-face {
+      font-family: 'Baskervville';
+      src: url('/Baskervville-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* Base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Baskervville', serif;
+      background-color: #ffffff;
+      color: rgba(0, 0, 0, 0.9);
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Lebron background with fade effect for the page */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .lebron-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/lebron.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+      filter: blur(3px) brightness(1.5);
+    }
+
+    /* White overlay with golden glow */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 0%, rgba(255, 250, 240, 0.8) 50%, rgba(255, 236, 179, 0.7) 100%);
+      z-index: -1;
+    }
+
+    /* Chat container */
+    .chat-container {
+      max-width: 900px;
+      height: 100vh;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    /* Header */
+    .chat-header {
+      text-align: center;
+      padding: 20px 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(212, 160, 23, 0.3);
+    }
+
+    .chat-header h1 {
+      font-size: 2.5em;
+      background: linear-gradient(to right, #d4a017, #b07513);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      font-weight: normal;
+    }
+
+    .chat-header p {
+      color: rgba(0, 0, 0, 0.7);
+      margin-top: 5px;
+    }
+
+    /* Messages area with fading Lebron background */
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(5px);
+      z-index: 1;
+    }
+
+    /* Fading Lebron background specifically for the chat box - with increased opacity */
+    .messages-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/lebron.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      z-index: -1;
+      border-radius: 12px;
+      animation: fade-in-out 8s infinite alternate ease-in-out;
+    }
+
+    @keyframes fade-in-out {
+      0% {
+        opacity: 0.1;
+      }
+      50% {
+        opacity: 0.3;
+      }
+      100% {
+        opacity: 0.1;
+      }
+    }
+
+    .message {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 80%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .user-message {
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .lebron-message {
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      align-self: flex-start;
+    }
+
+    .message-sender {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #b07513;
+    }
+
+    .message-text {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    .message-time {
+      font-size: 0.8em;
+      color: rgba(0, 0, 0, 0.5);
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    /* Input area */
+    .input-container {
+      display: flex;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+
+    .message-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      border-radius: 8px;
+      font-family: 'Baskervville', serif;
+      font-size: 1em;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: rgba(0, 0, 0, 0.8);
+      margin-right: 10px;
+    }
+
+    .message-input:focus {
+      outline: none;
+      border-color: #d4a017;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .send-button {
+      padding: 12px 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #b07513;
+      border: 1px solid #d4a017;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Baskervville', serif;
+      font-size: 1em;
+      transition: all 0.2s ease;
+    }
+
+    .send-button:hover {
+      background-color: rgba(212, 160, 23, 0.1);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Back button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #b07513;
+      border: 1px solid #d4a017;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Baskervville', serif;
+      font-size: 0.9em;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      z-index: 10;
+    }
+
+    .back-button:hover {
+      background-color: rgba(212, 160, 23, 0.1);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Ethereal glow effect */
+    .glow-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1000px;
+      height: 1000px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, rgba(255, 236, 179, 0.05) 40%, rgba(255, 255, 255, 0) 70%);
+      border-radius: 50%;
+      z-index: -1;
+      animation: pulse 10s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+      }
+    }
+
+    /* Ensure scrollbar doesn't interfere with the background */
+    .messages-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+      background-color: rgba(212, 160, 23, 0.3);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background elements -->
+  <div class="background-container">
+    <div class="lebron-bg"></div>
+    <div class="overlay"></div>
+  </div>
+  <div class="glow-effect"></div>
+  
+  <!-- Chat interface -->
+  <a href="/" class="back-button">← Return Home</a>
+  
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>Lebron GPT</h1>
+      <p>Commune with the ethereal basketball intelligence</p>
+    </div>
+    
+    <div class="messages-container" id="messages">
+      <!-- Sample messages for demonstration -->
+      <div class="message lebron-message">
+        <div class="message-sender">Ethereal Lebron</div>
+        <div class="message-text">Welcome to my realm of basketball wisdom. What guidance do you seek today?</div>
+        <div class="message-time">Just now</div>
+      </div>
+    </div>
+    
+    <div class="input-container">
+      <input type="text" class="message-input" id="user-input" placeholder="Ask Lebron for wisdom..." autocomplete="off">
+      <button class="send-button" id="send-button">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Chat functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const messagesContainer = document.getElementById('messages');
+      const userInput = document.getElementById('user-input');
+      const sendButton = document.getElementById('send-button');
+      
+      // Sample responses from Lebron
+      const lebronResponses = [
+        "The path to greatness requires sacrifice. Are you willing to give what it takes?",
+        "I see the game in ways others cannot. The court is a canvas, and I am the artist.",
+        "Your potential is limitless, just as the universe that surrounds us.",
+        "In the quiet moments, that's when true champions are forged.",
+        "Trust the process, but also trust your instincts. They are gifts from the basketball gods.",
+        "I've transcended the physical game. Now I exist in all planes of basketball consciousness.",
+        "The ball finds energy. Bring positive light to your game, and success will follow.",
+        "From Cleveland to Miami, back to Cleveland, then to LA. My journey mirrors the hero's path.",
+        "When you feel doubt, remember that even the stars were once just cosmic dust."
+      ];
+      
+      // Function to add a message to the chat
+      function addMessage(text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = isUser ? 'message user-message' : 'message lebron-message';
+        
+        const sender = document.createElement('div');
+        sender.className = 'message-sender';
+        sender.textContent = isUser ? 'You' : 'Ethereal Lebron';
+        
+        const messageText = document.createElement('div');
+        messageText.className = 'message-text';
+        messageText.textContent = text;
+        
+        const time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = 'Just now';
+        
+        messageDiv.appendChild(sender);
+        messageDiv.appendChild(messageText);
+        messageDiv.appendChild(time);
+        
+        messagesContainer.appendChild(messageDiv);
+        
+        // Scroll to the bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+      
+      // Function to get a random Lebron response
+      function getLebronResponse() {
+        const randomIndex = Math.floor(Math.random() * lebronResponses.length);
+        return lebronResponses[randomIndex];
+      }
+      
+      // Function to handle sending a message
+      function sendMessage() {
+        const text = userInput.value.trim();
+        if (text) {
+          // Add user message
+          addMessage(text, true);
+          userInput.value = '';
+          
+          // Add Lebron's response after a delay
+          setTimeout(() => {
+            addMessage(getLebronResponse(), false);
+          }, 1000);
+        }
+      }
+      
+      // Event listeners
+      sendButton.addEventListener('click', sendMessage);
+      
+      userInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+      
+      // Focus the input field when the page loads
+      userInput.focus();
+    });
+  </script>
+</body>
+</html>

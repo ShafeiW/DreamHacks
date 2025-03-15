@@ -5,6 +5,35 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lebron GPT</title>
+    <style>
+      /* Preload the font */
+      @font-face {
+        font-family: 'Baskervville';
+        src: url('/Baskervville-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+      
+      /* Ensure bright white background even before CSS loads */
+      html, body {
+        background-color: #ffffff !important;
+        font-family: 'Baskervville', serif !important;
+        color: rgba(0, 0, 0, 0.9) !important;
+      }
+      
+      /* Bright white background with subtle glow */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 1) 0%, rgba(255, 250, 240, 0.9) 50%, rgba(255, 236, 179, 0.7) 100%);
+        z-index: -1;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

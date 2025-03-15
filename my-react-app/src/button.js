@@ -1,4 +1,4 @@
-export function setupCounter(element) {
+export function setupButton(element) {
   let clicked = false
   
   const setButtonText = (isClicked) => {
@@ -7,13 +7,10 @@ export function setupCounter(element) {
       element.innerHTML = `Channeling Lebron's wisdom...`
       element.disabled = true
       
-      // Simulate loading and then show a message
+      // Navigate to chat page after a brief delay
       setTimeout(() => {
-        alert("The King's wisdom is coming soon! This feature is under development.")
-        element.innerHTML = `Get Started`
-        element.disabled = false
-        clicked = false
-      }, 2000)
+        window.location.href = '/chat.html';
+      }, 1500)
     } else {
       element.innerHTML = `Get Started`
     }
