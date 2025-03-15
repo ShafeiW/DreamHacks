@@ -1,5 +1,6 @@
 # DreamHacks 2025: LeBronGPT
 
+Watch the demo video here!
 [![Watch the video](https://img.youtube.com/vi/-91YI2pRWVg/maxresdefault.jpg)](https://youtu.be/-91YI2pRWVg)
 
 
