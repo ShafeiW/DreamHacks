@@ -6,8 +6,9 @@ document.querySelector('#app').innerHTML = `
   <div class="glow-effect"></div>
   <h1>Lebron GPT</h1>
   <p class="tagline">The wisdom of greatness, illuminated</p>
-  <div class="card">
+  <div class="buttons-container">
     <button id="start-button" type="button">Get Started</button>
+    <a href="/news.html" class="news-button">News & Highlights</a>
   </div>
   <p class="description">
     Experience the ethereal basketball intelligence of the King

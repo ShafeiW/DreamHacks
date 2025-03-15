@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lebron News & Highlights</title>
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <style>
+    /* Import the Baskervville font */
+    @font-face {
+      font-family: 'Baskervville';
+      src: url('/Baskervville-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* Base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Baskervville', serif;
+      background-color: #ffffff;
+      color: rgba(0, 0, 0, 0.9);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Lebron background with fade effect */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .lebron-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/lebron.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+      filter: blur(3px) brightness(1.5);
+      animation: subtle-fade 20s infinite alternate ease-in-out;
+    }
+
+    @keyframes subtle-fade {
+      0% {
+        opacity: 0.1;
+      }
+      50% {
+        opacity: 0.2;
+      }
+      100% {
+        opacity: 0.1;
+      }
+    }
+
+    /* White overlay with golden glow */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.85) 0%, rgba(255, 250, 240, 0.8) 50%, rgba(255, 236, 179, 0.7) 100%);
+      z-index: -1;
+    }
+
+    /* Main container */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 3em;
+      background: linear-gradient(to right, #d4a017, #b07513);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 1.2em;
+    }
+
+    /* Content sections */
+    .section {
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-size: 2em;
+      color: #b07513;
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(to right, #d4a017, #b07513);
+      margin: 10px auto;
+    }
+
+    /* News cards */
+    .news-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .news-card {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(212, 160, 23, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(212, 160, 23, 0.2);
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(212, 160, 23, 0.2);
+    }
+
+    .news-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(212, 160, 23, 0.1);
+    }
+
+    .news-content {
+      padding: 20px;
+    }
+
+    .news-date {
+      font-size: 0.8em;
+      color: #b07513;
+      margin-bottom: 5px;
+    }
+
+    .news-title {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    .news-excerpt {
+      font-size: 0.9em;
+      color: rgba(0, 0, 0, 0.7);
+      margin-bottom: 15px;
+    }
+
+    .news-link {
+      display: inline-block;
+      color: #b07513;
+      text-decoration: none;
+      font-size: 0.9em;
+      transition: color 0.2s ease;
+    }
+
+    .news-link:hover {
+      color: #d4a017;
+      text-decoration: underline;
+    }
+
+    /* Highlights section */
+    .highlights-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 30px;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(212, 160, 23, 0.1);
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-title {
+      margin-top: 10px;
+      font-size: 1em;
+      color: rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+
+    /* Back button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #b07513;
+      border: 1px solid #d4a017;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Baskervville', serif;
+      font-size: 0.9em;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      z-index: 10;
+    }
+
+    .back-button:hover {
+      background-color: rgba(212, 160, 23, 0.1);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Ethereal glow effect */
+    .glow-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1000px;
+      height: 1000px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, rgba(255, 236, 179, 0.05) 40%, rgba(255, 255, 255, 0) 70%);
+      border-radius: 50%;
+      z-index: -1;
+      animation: pulse 10s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .news-container, .highlights-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .header h1 {
+        font-size: 2.5em;
+      }
+      
+      .section-title {
+        font-size: 1.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background elements -->
+  <div class="background-container">
+    <div class="lebron-bg"></div>
+    <div class="overlay"></div>
+  </div>
+  <div class="glow-effect"></div>
+  
+  <!-- Main content -->
+  <a href="/" class="back-button">← Return Home</a>
+  
+  <div class="main-container">
+    <div class="header">
+      <h1>Lebron News & Highlights</h1>
+      <p>Stay updated with the latest from the King and his family</p>
+    </div>
+    
+    <div class="section">
+      <h2 class="section-title">Latest News</h2>
+      <div class="news-container">
+        <!-- News Card 1 -->
+        <div class="news-card">
+          <img src="bryce.jpg" alt="LeBron James" class="news-image">
+          <div class="news-content">
+            <div class="news-date">14 Hours Ago</div>
+            <h3 class="news-title">LeBron James misses Lakers loss to watch suspenseful outcome in son Bryce's state championship game</h3>
+            <p class="news-excerpt">LeBron James is nursing a groin injury, and with him unavailable, the Los Angeles Lakers allowed him to skip out on their Friday night game entirely.</p>
+            <a href="https://www.sportingnews.com/ca/nba/los-angeles-lakers/news/lebron-james-misses-lakers-son-bryce-state-championship/a0f3e6bde4b6065f3789ba37" class="news-link">Read More →</a>
+          </div>
+        </div>
+        
+        <!-- News Card 2 -->
+        <div class="news-card">
+          <img src="bronny.jpg" alt="LeBron and Bronny James" class="news-image">
+          <div class="news-content">
+            <div class="news-date">15 Hours Ago</div>
+            <h3 class="news-title">How many points did Bronny James score? Full stats, highlights for LeBron's son in Lakers vs. Nuggets</h3>
+            <p class="news-excerpt">After a couple of games back in the G League, Bronny James returned to the NBA proper on Friday night as the Los Angeles Lakers took on the Denver Nuggets.</p>
+            <a href="https://www.sportingnews.com/ca/nba/los-angeles-lakers/news/bronny-james-points-score-full-stats-highlights-lebron-son-lakers-nuggets/e8324caafcf3c0a1d8bcbe94" class="news-link">Read More →</a>
+          </div>
+        </div>
+        
+        <!-- News Card 3 -->
+        <div class="news-card">
+          <img src="lefriends.jpg" alt="LeBron James Lakers" class="news-image">
+          <div class="news-content">
+            <div class="news-date">23 Hours Ago</div>
+            <h3 class="news-title">Two of LeBron James' closest friends share full details of Stephen A. Smith beef</h3>
+            <p class="news-excerpt">LeBron James has been close friends with Dwyane Wade and Carmelo Anthony for many years.</p>
+            <a href="https://www.sportingnews.com/ca/nba/los-angeles-lakers/news/lebron-james-closest-friends-full-details-stephen-smith-beef/b8f15a55029fc6333023a823" class="news-link">Read More →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2 class="section-title">Career Highlights</h2>
+      <div class="highlights-container">
+        <!-- Highlight 1 -->
+        <div class="highlight-item">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/-9lP95Qo-I0" title="LeBron James Top 40 Plays of Career" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <h3 class="video-title">LeBron James Top 40 Plays of Career</h3>
+        </div>
+        
+        <!-- Highlight 2 -->
+        <div class="highlight-item">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/E8I-znR3NRw" title="LeBron James' CLUTCHEST career Moments!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <h3 class="video-title">LeBron James' CLUTCHEST career Moments!</h3>
+        </div>
+        
+        <!-- Highlight 3 -->
+        <div class="highlight-item">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/YtBAshwZs3A" title="LeBron James' ICONIC Game 6 Performance" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <h3 class="video-title">LeBron James' Iconic Game 6 Performance</h3>
+        </div>
+        
+        <!-- Highlight 4 -->
+        <div class="highlight-item">
+          <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/xKdMUAr6_vQ" title="BEST Of LeBron James Rim-Rocking DUNKS" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <h3 class="video-title">BEST Of LeBron James Rim-Rocking DUNKS</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // You can add JavaScript here if needed for dynamic content
+    document.addEventListener('DOMContentLoaded', function() {
+      // For example, you could fetch the latest news from an API
+      // and dynamically populate the news cards
+    });
+  </script>
+</body>
+</html>
